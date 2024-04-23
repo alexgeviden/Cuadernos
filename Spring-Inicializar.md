@@ -354,4 +354,42 @@ Para finalmente añadirlo al control
 
    Estas son algunas formas comunes de definir consultas personalizadas en Spring Data JPA. Puedes elegir la opción que mejor se adapte a tus necesidades y preferencias. Recuerda que estas son solo algunas posibilidades, y Spring Data JPA ofrece muchas más opciones para manejar consultas personalizadas y complejas.
 
+## Apuntes sobre JPA mapping 
 
+Para mapear con cardinalidad usamos anotaciones como   
+
+**@OneToOne, @OneToMany, @ManyToOne, @ManyToMany**  
+
+Estas han de mapear la otra clase usando el nombre de la variable que las conecte , y no usando el @Joincolumn que le pusimos de nombre a la columna de la tabla.  
+
+- Tabla / Entidad / Clase **Direccion**  
+
+```java
+@Entity
+@Table(name = "direccion")
+public class Direccion {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    int cod_direccion;
+    String municipio;
+
+    @OneToOne(mappedBy = "dir")
+    Empleado empleado;
+
+```
+- Tabla / Entidad / Clase **Empleado**  
+```java
+@Entity
+
+public class Empleado {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    int idempleado;
+    String Nombre;
+    String Depart;
+
+    @OneToOne
+    @JoinColumn(name = "fk_dir")
+    private Direccion dir;
+
+```

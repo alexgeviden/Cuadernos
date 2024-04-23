@@ -1,5 +1,6 @@
 # Como Inicializar Springboot para realizar un CRUD
-
+## Estructura de directorios a seguir (MVC)
+![Foto de estructura](/img/estructura.png)
 ## Mapear URL En springboot
 
 #### Colocamos anotaciones que van con el '@' , con esto le decimos que esto es el controlador y que redireccione a la ruta especificada en RequestMapping

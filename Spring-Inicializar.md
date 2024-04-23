@@ -1,653 +1,357 @@
-{
- "cells": [
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "# Como Inicializar Springboot para realizar un CRUD"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "## Mapear URL En springboot"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "#### Colocamos anotaciones que van con el '@' , con esto le decimos que esto es el controlador y que redireccione a la ruta especificada en RequestMapping"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "dotnet_interactive": {
-     "language": "javascript"
-    },
-    "polyglot_notebook": {
-     "kernelName": "javascript"
-    },
-    "scrolled": true,
-    "vscode": {
-     "languageId": "polyglot-notebook"
+# Como Inicializar Springboot para realizar un CRUD
+
+## Mapear URL En springboot
+
+#### Colocamos anotaciones que van con el '@' , con esto le decimos que esto es el controlador y que redireccione a la ruta especificada en RequestMapping
+
+
+```Java
+
+@Controller
+@ResponseBody
+public class EmpleadoControl {
+
+@RequestMapping("/empleados")
+    public List<Empleado> listarEmpleados(){
+        List<Empleado> listaEmpleados = new ArrayList<>();
+
+        // Creamos 5 objetos Empleado y los agregamos a la lista
+        listaEmpleados.add(new Empleado(1, "Martin Gonzalez", "Ventas"));
+        listaEmpleados.add(new Empleado(2, "Ana Lopez", "Marketing"));
+        listaEmpleados.add(new Empleado(3, "Juan Ramirez", "Recursos Humanos"));
+        listaEmpleados.add(new Empleado(4, "Maria Sanchez", "Contabilidad"));
+        listaEmpleados.add(new Empleado(5, "Carlos Martinez", "Tecnología"));
+        return listaEmpleados;
     }
-   },
-   "outputs": [],
-   "source": [
-    "\n",
-    "@Controller\n",
-    "@ResponseBody\n",
-    "public class EmpleadoControl {\n",
-    "\n",
-    "@RequestMapping(\"/empleados\")\n",
-    "    public List<Empleado> listarEmpleados(){\n",
-    "        List<Empleado> listaEmpleados = new ArrayList<>();\n",
-    "\n",
-    "        // Creamos 5 objetos Empleado y los agregamos a la lista\n",
-    "        listaEmpleados.add(new Empleado(1, \"Martin Gonzalez\", \"Ventas\"));\n",
-    "        listaEmpleados.add(new Empleado(2, \"Ana Lopez\", \"Marketing\"));\n",
-    "        listaEmpleados.add(new Empleado(3, \"Juan Ramirez\", \"Recursos Humanos\"));\n",
-    "        listaEmpleados.add(new Empleado(4, \"Maria Sanchez\", \"Contabilidad\"));\n",
-    "        listaEmpleados.add(new Empleado(5, \"Carlos Martinez\", \"Tecnología\"));\n",
-    "        return listaEmpleados;\n",
-    "    }\n",
-    "}\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "## Añadimos las dependencias\n",
-    "\n",
-    "\n",
-    "\n",
-    "\n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "dotnet_interactive": {
-     "language": "javascript"
-    },
-    "polyglot_notebook": {
-     "kernelName": "javascript"
-    },
-    "vscode": {
-     "languageId": "polyglot-notebook"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "spring.application.name=EmpleadoAplication\n",
-    "spring.datasource.url=jdbc:mysql://localhost:3306/springproject\n",
-    "spring.datasource.username=root\n",
-    "spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver\n",
-    "spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### Creamos las clases que despues seran conectadas con la Base de Datos\n",
-    "Tienen que tener constructores , getters y setters  para poder correr el proyecto "
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "dotnet_interactive": {
-     "language": "csharp"
-    },
-    "polyglot_notebook": {
-     "kernelName": "csharp"
-    },
-    "vscode": {
-     "languageId": "polyglot-notebook"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "package alexander.EmpleadoAplication.Entidades;\n",
-    "\n",
-    "public class Empleado {\n",
-    "    int idempleado;\n",
-    "    String Nombre;\n",
-    "    String Depart;\n",
-    "\n",
-    "    public Empleado(int idempleado, String nombre, String depart) {\n",
-    "        this.idempleado = idempleado;\n",
-    "        Nombre = nombre;\n",
-    "        Depart = depart;\n",
-    "    }}"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "## Metodo Get para conectar el servicio con las clases\n",
-    "\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "En el servicio usamos el comentario @Service para que se conozca como un servicio y se pueda inyectar en las clases que lo necesiten  \n",
-    "\n",
-    "Ademas esta sera la clase que llame a los objetos que hemos creado. Y la que llamaremos con el controlador para enviar los datos"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "dotnet_interactive": {
-     "language": "csharp"
-    },
-    "polyglot_notebook": {
-     "kernelName": "csharp"
-    },
-    "vscode": {
-     "languageId": "polyglot-notebook"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "@Service\n",
-    "public class ServicioEmpleado {\n",
-    "\n",
-    "    List<Empleado> listaEmpleados = Arrays.asList(\n",
-    "            new Empleado(1, \"Martin Gonzalez\", \"Ventas\"),\n",
-    "            new Empleado(2, \"Ana Lopez\", \"Marketing\"),\n",
-    "            new Empleado(3, \"Juan Ramirez\", \"Recursos Humanos\"),\n",
-    "            new Empleado(4, \"Maria Sanchez\", \"Contabilidad\"),\n",
-    "            new Empleado(5, \"Carlos Martinez\", \"Tecnología\")\n",
-    "\n",
-    "    );\n",
-    "\n",
-    "public List<Empleado> getAllEmpleados(){\n",
-    "            return listaEmpleados;\n",
-    "    }\n",
-    "\n",
-    "    public Empleado getAnEmpleado(int id){\n",
-    "    return listaEmpleados.stream().filter(e ->(\n",
-    "            e.getIdempleado() == id)).findFirst().get();\n",
-    "\n",
-    "    }\n",
-    "\n",
-    "}"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "En el Controlador usamos la anotacion @Controler y el metodo que queremos que se ejecute cuando se acceda a la ruta.  \n",
-    "\n",
-    "Usamos @RequestingMapping para decirle la ruta que queremos en la URL.  \n",
-    "\n",
-    "Ponemos @AutoWired para que sepa que la clase que estamos empleando para crear el objeto esta en el servicio.  "
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "dotnet_interactive": {
-     "language": "csharp"
-    },
-    "polyglot_notebook": {
-     "kernelName": "csharp"
-    },
-    "vscode": {
-     "languageId": "polyglot-notebook"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "@Controller\n",
-    "@ResponseBody\n",
-    "public class EmpleadoControl {\n",
-    "\n",
-    "    @Autowired\n",
-    "    ServicioEmpleado ser;\n",
-    "\n",
-    "@RequestMapping(\"/empleados\")\n",
-    "    public List<Empleado> listarEmpleados(){\n",
-    "\n",
-    "\n",
-    "        return ser.getAllEmpleados();\n",
-    "    }\n",
-    "    @RequestMapping(\"/empleados/{id}\")\n",
-    "    public Empleado findAnEmpleado(@PathVariable int id){\n",
-    "    return ser.getAnEmpleado(id);\n",
-    "    }\n",
-    "}"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "Para declarar la variable que viene entregada desde la url usamos las llaves {} y el nombre de la variable.   \n",
-    "\n",
-    "Luego en nuestra funcion usamos @PathVariable para recoger la variable que se nos envia por el navegador y la guardamos en una variable.    \n",
-    "\n",
-    "Para devolver el valor de la variable usamos el metodo .get() y el nombre de la variable."
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "## Metodo Post"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "Añadimos esos valores a @RequestMapping ya que po defecto usa el metodo get y hay que especificar que queremos usar otro metodo  \n",
-    "  \n",
-    "Si lo que buscamos es recoger lo enviado desde nuestro body usamos @Requestbody en la declaracion de variable."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "dotnet_interactive": {
-     "language": "csharp"
-    },
-    "polyglot_notebook": {
-     "kernelName": "csharp"
-    },
-    "vscode": {
-     "languageId": "polyglot-notebook"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "    @RequestMapping(value = \"/empleados\" , method = RequestMethod.POST)\n",
-    "    public void createEmpleado(@RequestBody Empleado emp){\n",
-    "    ser.createEmpleado(emp);\n",
-    "    }"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "Ese metodo de crear empleado se encuentra en ServicioEmpleado , aligual que la variable 'ser' que se encuentra declarada al inicio del Servicio\n",
-    "\n",
-    "\n",
-    "```\n",
-    "    public void createEmpleado(Empleado emp){\n",
-    "\n",
-    "    listaEmpleados.add(emp);\n",
-    "\n",
-    "    }\n",
-    "```"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "## Redirecciones con anotacion "
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "Podemos obvias @RequestMapping usando esta avrebiatura : "
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "```\n",
-    "@GetMapping\n",
-    "\n",
-    "@PostMapping\n",
-    "\n",
-    "@PutMapping\n",
-    "\n",
-    "@DeleteMapping\n",
-    "\n",
-    "@PatchMapping\n",
-    "```"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "## Creacion de Interfaz para la conexion SQL"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "Creamos un nuevo paquete de repositorios , dentro vamos a crear interfaces para cada clases.  \n",
-    "Extenderemos estas clases usando el repositorio JPA para que sea capaz de hacer y ejecutar consultas."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "dotnet_interactive": {
-     "language": "csharp"
-    },
-    "polyglot_notebook": {
-     "kernelName": "csharp"
-    },
-    "vscode": {
-     "languageId": "polyglot-notebook"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "package alexander.EmpleadoAplication.Repo;\n",
-    "\n",
-    "import alexander.EmpleadoAplication.Entidades.Empleado;\n",
-    "import org.springframework.data.jpa.repository.JpaRepository;\n",
-    "import org.springframework.data.jpa.repository.config.JpaRepositoryConfigExtension;\n",
-    "\n",
-    "public interface EmpleadoRepo extends JpaRepository<Empleado, Integer> {\n",
-    "\n",
-    "    // Crud para las clases\n",
-    "\n",
-    "    \n",
-    "}\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "Ademas hemos de crear un repositorio por cada clase  \n",
-    "El cual anotamos como @Entity para que sea reconocible  \n",
-    "Usamos @Id para que cree una tabla identificadora y @GeneratedValue para que sea autoincrementable.  \n",
-    "Despues creara las tablas necesarias con la informacion que le hemos proporcionado  \n"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "dotnet_interactive": {
-     "language": "csharp"
-    },
-    "polyglot_notebook": {
-     "kernelName": "csharp"
-    },
-    "vscode": {
-     "languageId": "polyglot-notebook"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "import jakarta.persistence.Entity;\n",
-    "import jakarta.persistence.GeneratedValue;\n",
-    "import jakarta.persistence.GenerationType;\n",
-    "import jakarta.persistence.Id;\n",
-    "\n",
-    "@Entity\n",
-    "public class Prueba {\n",
-    "    @Id\n",
-    "    @GeneratedValue(strategy = GenerationType.IDENTITY)\n",
-    "    private Long id;\n",
-    "    private String nombre;\n"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "Para la conexion con la base hemos de escribir algo como esto en Aplicationpropperties  \n",
-    "Donde marcaos la url de la base de datos y el usuario y contraseña ademas del dialectoq ue usara spring para la comunacion.  \n",
-    "En la ultimainstancia entregamos los permisos a springboot para que haga registrso o eliminaciones en la base de datos."
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "dotnet_interactive": {
-     "language": "csharp"
-    },
-    "polyglot_notebook": {
-     "kernelName": "csharp"
-    },
-    "vscode": {
-     "languageId": "polyglot-notebook"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "spring.datasource.url=jdbc:sqlite:proyecto.db\n",
-    "spring.datasource.driver-class-name=org.sqlite.JDBC\n",
-    "spring.jpa.database-platform=org.hibernate.community.dialect.SQLiteDialect\n",
-    "spring.jpa.hibernate.ddl-auto=update"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "## Manipulacion de datos con JPA"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "### Creamos la clase repositorio para incluir los de nuestras clases  \n",
-    "Aqui nombramos con '@Repositoti'"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "vscode": {
-     "languageId": "polyglot-notebook"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "@Repository\n",
-    "public interface EmpleadoRepo extends JpaRepository<Empleado, Integer> {\n",
-    "\n",
-    "    // Crud para las clases\n",
-    "\n",
-    "\n",
-    "}"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "Esto lo añadimos a la clase del Servicio"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "vscode": {
-     "languageId": "polyglot-notebook"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "  @Autowired\n",
-    "    EmpleadoRepo repemp;\n",
-    "\n",
-    "public List<Empleado> getAllEmpleados(){\n",
-    "            return repemp.findAll();\n",
-    "    }\n",
-    "\n",
-    "    public Optional<Empleado> getAnEmpleado(int id){\n",
-    "    return repemp.findById(id);\n",
-    "\n",
-    "    }\n",
-    "    public void createEmpleado(Empleado emp){\n",
-    "\n",
-    "\n",
-    "        repemp.save(emp);\n",
-    "    }"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "Para finalmente añadirlo al control"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "vscode": {
-     "languageId": "polyglot-notebook"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "  @Autowired\n",
-    "        ServicioEmpleado ser;\n",
-    "\n",
-    "    @RequestMapping(\"/empleados\")\n",
-    "        public List<Empleado> listarEmpleados(){\n",
-    "\n",
-    "\n",
-    "            return ser.getAllEmpleados();\n",
-    "        }\n",
-    "        @RequestMapping(\"/empleados/{id}\")\n",
-    "            public Optional<Empleado> findAnEmpleado(@PathVariable int id){\n",
-    "            return ser.getAnEmpleado(id);\n",
-    "            }\n",
-    "\n",
-    "        @RequestMapping(value = \"/empleados\" , method = RequestMethod.POST)\n",
-    "            public void createEmpleado(@RequestBody Empleado emp){\n",
-    "            ser.createEmpleado(emp);\n",
-    "            }"
-   ]
-  },
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "## Funciones JPA utiles  \n",
-    "\n",
-    "1. **Save/Update (Guardar/Actualizar)**:\n",
-    "   - `save(entity)`: Guarda una nueva entidad o actualiza una entidad existente.\n",
-    "   - `saveAll(entities)`: Guarda una colección de entidades.\n",
-    "\n",
-    "2. **Retrieve (Recuperar)**:\n",
-    "   - `findById(id)`: Recupera una entidad por su ID.\n",
-    "   - `findAll()`: Recupera todas las entidades del repositorio.\n",
-    "   - `findAllById(ids)`: Recupera entidades por una lista de IDs.\n",
-    "   - `findAll(Sort)`: Recupera todas las entidades ordenadas según el criterio especificado.\n",
-    "   - `findAll(Pageable)`: Recupera una página de entidades paginadas.\n",
-    "\n",
-    "3. **Delete (Eliminar)**:\n",
-    "   - `delete(entity)`: Elimina una entidad.\n",
-    "   - `deleteById(id)`: Elimina una entidad por su ID.\n",
-    "   - `deleteAll()`: Elimina todas las entidades del repositorio.\n",
-    "   - `deleteAll(entities)`: Elimina una colección de entidades.\n",
-    "\n",
-    "4. **Count (Contar)**:\n",
-    "   - `count()`: Devuelve el número total de entidades en el repositorio.\n",
-    "\n",
-    "5. **Exists (Verificar existencia)**:\n",
-    "   - `existsById(id)`: Verifica si una entidad con el ID dado existe en el repositorio.\n",
-    "\n",
-    "6. **Custom Queries (Consultas personalizadas)**:\n",
-    "   - **Consultas basadas en convenciones de nombres**:\n",
-    "     - Spring Data JPA puede generar automáticamente consultas basadas en el nombre de los métodos en tu repositorio. Por ejemplo, si tienes un método en tu repositorio llamado `findByNombre`, Spring Data JPA generará una consulta para recuperar las entidades por el atributo `nombre`.\n",
-    "\n",
-    "     Ejemplo:\n",
-    "     ```java\n",
-    "     public interface EmpleadoRepo extends JpaRepository<Empleado, Integer> {\n",
-    "         List<Empleado> findByNombre(String nombre);\n",
-    "     }\n",
-    "     ```\n",
-    "\n",
-    "   - **Consultas JPQL**:\n",
-    "     - Puedes definir tus propias consultas utilizando JPQL. Para esto, puedes usar la anotación `@Query` en los métodos de tu repositorio y proporcionar la consulta JPQL como valor de la anotación.\n",
-    "\n",
-    "     Ejemplo:\n",
-    "     ```java\n",
-    "     import org.springframework.data.jpa.repository.Query;\n",
-    "\n",
-    "     public interface EmpleadoRepo extends JpaRepository<Empleado, Integer> {\n",
-    "         @Query(\"SELECT e FROM Empleado e WHERE e.departamento = ?1\")\n",
-    "         List<Empleado> findByDepartamento(String departamento);\n",
-    "     }\n",
-    "     ```\n",
-    "\n",
-    "   - **Consultas nativas de SQL**:\n",
-    "     - También puedes ejecutar consultas SQL nativas utilizando la anotación `@Query` con la opción `nativeQuery` establecida en `true`.\n",
-    "\n",
-    "     Ejemplo:\n",
-    "     ```java\n",
-    "     import org.springframework.data.jpa.repository.Query;\n",
-    "\n",
-    "     public interface EmpleadoRepo extends JpaRepository<Empleado, Integer> {\n",
-    "         @Query(value = \"SELECT * FROM empleado WHERE departamento = ?1\", nativeQuery = true)\n",
-    "         List<Empleado> findByDepartamento(String departamento);\n",
-    "     }\n",
-    "     ```\n",
-    "\n",
-    "   Estas son algunas formas comunes de definir consultas personalizadas en Spring Data JPA. Puedes elegir la opción que mejor se adapte a tus necesidades y preferencias. Recuerda que estas son solo algunas posibilidades, y Spring Data JPA ofrece muchas más opciones para manejar consultas personalizadas y complejas.\n"
-   ]
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Java",
-   "language": "java",
-   "name": "java"
-  },
-  "language_info": {
-   "codemirror_mode": "java",
-   "file_extension": ".jshell",
-   "mimetype": "text/x-java-source",
-   "name": "Java",
-   "pygments_lexer": "java",
-   "version": "22+36-2370"
-  },
-  "polyglot_notebook": {
-   "kernelInfo": {
-    "defaultKernelName": "csharp",
-    "items": [
-     {
-      "aliases": [],
-      "name": "csharp"
-     }
-    ]
-   }
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 4
 }
+
+```
+
+## Añadimos las dependencias
+
+
+
+
+
+
+
+```Java
+spring.application.name=EmpleadoAplication
+spring.datasource.url=jdbc:mysql://localhost:3306/springproject
+spring.datasource.username=root
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+```
+
+### Creamos las clases que despues seran conectadas con la Base de Datos
+Tienen que tener constructores , getters y setters  para poder correr el proyecto 
+
+
+```Java
+package alexander.EmpleadoAplication.Entidades;
+
+public class Empleado {
+    int idempleado;
+    String Nombre;
+    String Depart;
+
+    public Empleado(int idempleado, String nombre, String depart) {
+        this.idempleado = idempleado;
+        Nombre = nombre;
+        Depart = depart;
+    }}
+```
+
+## Metodo Get para conectar el servicio con las clases
+
+
+
+En el servicio usamos el comentario @Service para que se conozca como un servicio y se pueda inyectar en las clases que lo necesiten  
+
+Ademas esta sera la clase que llame a los objetos que hemos creado. Y la que llamaremos con el controlador para enviar los datos
+
+
+```Java
+@Service
+public class ServicioEmpleado {
+
+    List<Empleado> listaEmpleados = Arrays.asList(
+            new Empleado(1, "Martin Gonzalez", "Ventas"),
+            new Empleado(2, "Ana Lopez", "Marketing"),
+            new Empleado(3, "Juan Ramirez", "Recursos Humanos"),
+            new Empleado(4, "Maria Sanchez", "Contabilidad"),
+            new Empleado(5, "Carlos Martinez", "Tecnología")
+
+    );
+
+public List<Empleado> getAllEmpleados(){
+            return listaEmpleados;
+    }
+
+    public Empleado getAnEmpleado(int id){
+    return listaEmpleados.stream().filter(e ->(
+            e.getIdempleado() == id)).findFirst().get();
+
+    }
+
+}
+```
+
+En el Controlador usamos la anotacion @Controler y el metodo que queremos que se ejecute cuando se acceda a la ruta.  
+
+Usamos @RequestingMapping para decirle la ruta que queremos en la URL.  
+
+Ponemos @AutoWired para que sepa que la clase que estamos empleando para crear el objeto esta en el servicio.  
+
+
+```Java
+@Controller
+@ResponseBody
+public class EmpleadoControl {
+
+    @Autowired
+    ServicioEmpleado ser;
+
+@RequestMapping("/empleados")
+    public List<Empleado> listarEmpleados(){
+
+
+        return ser.getAllEmpleados();
+    }
+    @RequestMapping("/empleados/{id}")
+    public Empleado findAnEmpleado(@PathVariable int id){
+    return ser.getAnEmpleado(id);
+    }
+}
+```
+
+Para declarar la variable que viene entregada desde la url usamos las llaves {} y el nombre de la variable.   
+
+Luego en nuestra funcion usamos @PathVariable para recoger la variable que se nos envia por el navegador y la guardamos en una variable.    
+
+Para devolver el valor de la variable usamos el metodo .get() y el nombre de la variable.
+
+## Metodo Post
+
+Añadimos esos valores a @RequestMapping ya que po defecto usa el metodo get y hay que especificar que queremos usar otro metodo  
+  
+Si lo que buscamos es recoger lo enviado desde nuestro body usamos @Requestbody en la declaracion de variable.
+
+
+```Java
+    @RequestMapping(value = "/empleados" , method = RequestMethod.POST)
+    public void createEmpleado(@RequestBody Empleado emp){
+    ser.createEmpleado(emp);
+    }
+```
+
+Ese metodo de crear empleado se encuentra en ServicioEmpleado , aligual que la variable 'ser' que se encuentra declarada al inicio del Servicio
+
+
+```
+    public void createEmpleado(Empleado emp){
+
+    listaEmpleados.add(emp);
+
+    }
+```
+
+## Redirecciones con anotacion 
+
+Podemos obvias @RequestMapping usando esta avrebiatura : 
+
+```
+@GetMapping
+
+@PostMapping
+
+@PutMapping
+
+@DeleteMapping
+
+@PatchMapping
+```
+
+## Creacion de Interfaz para la conexion SQL
+
+Creamos un nuevo paquete de repositorios , dentro vamos a crear interfaces para cada clases.  
+Extenderemos estas clases usando el repositorio JPA para que sea capaz de hacer y ejecutar consultas.
+
+
+```Java
+package alexander.EmpleadoAplication.Repo;
+
+import alexander.EmpleadoAplication.Entidades.Empleado;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.config.JpaRepositoryConfigExtension;
+
+public interface EmpleadoRepo extends JpaRepository<Empleado, Integer> {
+
+    // Crud para las clases
+
+    
+}
+
+```
+
+Ademas hemos de crear un repositorio por cada clase  
+El cual anotamos como @Entity para que sea reconocible  
+Usamos @Id para que cree una tabla identificadora y @GeneratedValue para que sea autoincrementable.  
+Despues creara las tablas necesarias con la informacion que le hemos proporcionado  
+
+
+
+```Java
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
+public class Prueba {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String nombre;
+
+```
+
+Para la conexion con la base hemos de escribir algo como esto en Aplicationpropperties  
+Donde marcaos la url de la base de datos y el usuario y contraseña ademas del dialectoq ue usara spring para la comunacion.  
+En la ultimainstancia entregamos los permisos a springboot para que haga registrso o eliminaciones en la base de datos.
+
+
+```Java
+spring.datasource.url=jdbc:sqlite:proyecto.db
+spring.datasource.driver-class-name=org.sqlite.JDBC
+spring.jpa.database-platform=org.hibernate.community.dialect.SQLiteDialect
+spring.jpa.hibernate.ddl-auto=update
+```
+
+## Manipulacion de datos con JPA
+
+### Creamos la clase repositorio para incluir los de nuestras clases  
+Aqui nombramos con '@Repositoti'
+
+
+```Java
+@Repository
+public interface EmpleadoRepo extends JpaRepository<Empleado, Integer> {
+
+    // Crud para las clases
+
+
+}
+```
+
+Esto lo añadimos a la clase del Servicio
+
+
+```Java
+  @Autowired
+    EmpleadoRepo repemp;
+
+public List<Empleado> getAllEmpleados(){
+            return repemp.findAll();
+    }
+
+    public Optional<Empleado> getAnEmpleado(int id){
+    return repemp.findById(id);
+
+    }
+    public void createEmpleado(Empleado emp){
+
+
+        repemp.save(emp);
+    }
+```
+
+Para finalmente añadirlo al control
+
+
+```Java
+  @Autowired
+        ServicioEmpleado ser;
+
+    @RequestMapping("/empleados")
+        public List<Empleado> listarEmpleados(){
+
+
+            return ser.getAllEmpleados();
+        }
+        @RequestMapping("/empleados/{id}")
+            public Optional<Empleado> findAnEmpleado(@PathVariable int id){
+            return ser.getAnEmpleado(id);
+            }
+
+        @RequestMapping(value = "/empleados" , method = RequestMethod.POST)
+            public void createEmpleado(@RequestBody Empleado emp){
+            ser.createEmpleado(emp);
+            }
+```
+
+## Funciones JPA utiles  
+
+1. **Save/Update (Guardar/Actualizar)**:
+   - `save(entity)`: Guarda una nueva entidad o actualiza una entidad existente.
+   - `saveAll(entities)`: Guarda una colección de entidades.
+
+2. **Retrieve (Recuperar)**:
+   - `findById(id)`: Recupera una entidad por su ID.
+   - `findAll()`: Recupera todas las entidades del repositorio.
+   - `findAllById(ids)`: Recupera entidades por una lista de IDs.
+   - `findAll(Sort)`: Recupera todas las entidades ordenadas según el criterio especificado.
+   - `findAll(Pageable)`: Recupera una página de entidades paginadas.
+
+3. **Delete (Eliminar)**:
+   - `delete(entity)`: Elimina una entidad.
+   - `deleteById(id)`: Elimina una entidad por su ID.
+   - `deleteAll()`: Elimina todas las entidades del repositorio.
+   - `deleteAll(entities)`: Elimina una colección de entidades.
+
+4. **Count (Contar)**:
+   - `count()`: Devuelve el número total de entidades en el repositorio.
+
+5. **Exists (Verificar existencia)**:
+   - `existsById(id)`: Verifica si una entidad con el ID dado existe en el repositorio.
+
+6. **Custom Queries (Consultas personalizadas)**:
+   - **Consultas basadas en convenciones de nombres**:
+     - Spring Data JPA puede generar automáticamente consultas basadas en el nombre de los métodos en tu repositorio. Por ejemplo, si tienes un método en tu repositorio llamado `findByNombre`, Spring Data JPA generará una consulta para recuperar las entidades por el atributo `nombre`.
+
+     Ejemplo:
+     ```java
+     public interface EmpleadoRepo extends JpaRepository<Empleado, Integer> {
+         List<Empleado> findByNombre(String nombre);
+     }
+     ```
+
+   - **Consultas JPQL**:
+     - Puedes definir tus propias consultas utilizando JPQL. Para esto, puedes usar la anotación `@Query` en los métodos de tu repositorio y proporcionar la consulta JPQL como valor de la anotación.
+
+     Ejemplo:
+     ```java
+     import org.springframework.data.jpa.repository.Query;
+
+     public interface EmpleadoRepo extends JpaRepository<Empleado, Integer> {
+         @Query("SELECT e FROM Empleado e WHERE e.departamento = ?1")
+         List<Empleado> findByDepartamento(String departamento);
+     }
+     ```
+
+   - **Consultas nativas de SQL**:
+     - También puedes ejecutar consultas SQL nativas utilizando la anotación `@Query` con la opción `nativeQuery` establecida en `true`.
+
+     Ejemplo:
+     ```java
+     import org.springframework.data.jpa.repository.Query;
+
+     public interface EmpleadoRepo extends JpaRepository<Empleado, Integer> {
+         @Query(value = "SELECT * FROM empleado WHERE departamento = ?1", nativeQuery = true)
+         List<Empleado> findByDepartamento(String departamento);
+     }
+     ```
+
+   Estas son algunas formas comunes de definir consultas personalizadas en Spring Data JPA. Puedes elegir la opción que mejor se adapte a tus necesidades y preferencias. Recuerda que estas son solo algunas posibilidades, y Spring Data JPA ofrece muchas más opciones para manejar consultas personalizadas y complejas.
+
+

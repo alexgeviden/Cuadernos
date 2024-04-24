@@ -57,8 +57,81 @@ COPY . .
 
 # Define el comando por defecto a ejecutar cuando el contenedor se inicia
 CMD ["comando", "argumento"]
+```
 
-## Más Recursos
+```bash
+docker build -t nombre_de_la_imagen .
+```
+## Guía para usar Docker Compose
 
-- [Docker Hub](https://hub.docker.com/): Registro público de imágenes Docker.
+### 1. Instalación de Docker Compose
+
+Antes de usar Docker Compose, asegúrate de tenerlo instalado en tu sistema. Puedes descargar la versión adecuada para tu sistema operativo desde [https://docs.docker.com/compose/install/](https://docs.docker.com/compose/install/) y seguir las instrucciones de instalación.
+
+### 2. Crear un archivo docker-compose.yml
+
+El archivo `docker-compose.yml` es un archivo YAML que define la configuración de tus servicios Docker. Aquí hay un ejemplo básico de un archivo `docker-compose.yml`:
+
+```yaml
+version: '3'
+services:
+  servicio1:
+    image: imagen_servicio1:tag
+    ports:
+      - "puerto_host:puerto_contenedor"
+    volumes:
+      - ./datos:/datos
+  servicio2:
+    image: imagen_servicio2:tag
+    environment:
+      - VARIABLE_DE_ENTORNO=valor
+```
+En este ejemplo, definimos dos servicios: web y db. El servicio web utiliza la imagen de NGINX y se expone en el puerto 8080 del host. El servicio db utiliza la imagen de MySQL y configura una contraseña de root.
+
+## Comandos Básicos de Docker Compose
+
+- `docker-compose up`: Inicia los contenedores definidos en el archivo docker-compose.yml.
+- `docker-compose down`: Detiene y elimina los contenedores definidos en el archivo docker-compose.yml.
+- `docker-compose ps`: Muestra el estado de los servicios definidos en el archivo docker-compose.yml.
+- `docker-compose logs`: Muestra los logs de los servicios definidos en el archivo docker-compose.yml.
+- `docker-compose exec [service] [command]`: Ejecuta un comando en un servicio específico.
+
+## Ejecución de Docker Compose
+
+Para ejecutar tu aplicación usando Docker Compose, sigue estos pasos:
+
+1. Crea un archivo docker-compose.yml con la configuración de tus servicios.
+2. Abre una terminal en la misma ubicación que tu archivo docker-compose.yml.
+3. Ejecuta el comando docker-compose up para iniciar tus servicios.
+4. Una vez que hayas terminado, puedes detener y eliminar los contenedores usando docker-compose down.
+# Volúmenes en Docker Compose
+
+Los volúmenes en Docker Compose permiten persistir datos fuera del ciclo de vida de los contenedores, lo que los hace ideales para compartir datos entre contenedores, realizar copias de seguridad y garantizar la persistencia de datos incluso cuando los contenedores se detienen o eliminan.
+
+## Definición de Volúmenes en docker-compose.yml
+
+Puedes definir volúmenes en tu archivo `docker-compose.yml` utilizando la sección `volumes`. Aquí hay un ejemplo básico de cómo hacerlo:
+
+```yaml
+version: '3.8'
+
+services:
+  db:
+    image: mysql:latest
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+```
+En este ejemplo, hemos definido un volumen llamado `mysql_data` que se monta en el directorio `/var/lib/mysql` dentro del contenedor del servicio `db`. Esto asegura que los datos de MySQL persistan incluso si el contenedor se detiene o se elimina.
+
+## Uso de Volúmenes en Servicios
+
+Una vez que hayas definido un volumen en tu archivo `docker-compose.yml`, puedes montarlo en tus servicios como se muestra en el ejemplo anterior. Simplemente agrega la clave `volumes` bajo tu servicio y lista el volumen que deseas utilizar.
+
+## Creación de Volúmenes Persistentes
+
+Docker Compose automáticamente crea volúmenes persistentes cuando usas la sección `volumes` en tu archivo `docker-compose.yml` como se muestra en el ejemplo anterior. Estos volúmenes persisten incluso cuando los contenedores se detienen o se eliminan.
+
 
